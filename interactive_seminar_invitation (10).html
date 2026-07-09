@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hội thảo: Đối thoại về tương lai cho con trong kỷ nguyên AI - MindX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mindx-red: #E31F26;
+            --mindx-navy: #000056;
+            --mindx-dark: #2C2A2B;
+            --mindx-white: #FFFFFF;
+            --mindx-light: #F8F9FA;
+        }
+        body {
+            font-family: 'SVN-Gilroy', 'Montserrat', sans-serif;
+            background-color: var(--mindx-white);
+            color: var(--mindx-dark);
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, .heading-font {
+            font-family: 'DT Phudu', 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        /* Ẩn scrollbar cho phần Tabs trên Mobile nhưng vẫn cho scroll */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 250px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        .btn-primary {
+            background-color: var(--mindx-red);
+            color: white;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #c9181e;
+            transform: translateY(-2px);
+        }
+        .tab-active {
+            border-bottom: 4px solid var(--mindx-red);
+            color: var(--mindx-red);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        
+        /* Pulse Animation cho Nút CTA chính */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(227, 31, 38, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(227, 31, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 31, 38, 0); }
+        }
+        .animate-pulse-cta {
+            animation: pulse-red 2s infinite;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden pt-16 md:pt-20 relative">
+
+<!-- Navigation -->
+<nav class="fixed top-0 w-full bg-white/95 backdrop-blur-md z-40 border-b border-gray-100 shadow-sm transition-all">
+    <div class="max-w-7xl mx-auto px-4 py-3 md:py-3 flex justify-between items-center relative">
+        
+        <!-- Logo -->
+        <a href="#" class="flex items-center space-x-2 shrink-0">
+            <img src="MindX_Tech&AI_logo-06.png" alt="MindX Tech & AI School" class="h-10 md:h-14 object-contain">
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8 text-sm font-semibold uppercase tracking-wider">
+            <a href="#about" class="hover:text-[#E31F26] transition-colors">Hội Thảo</a>
+            <a href="#lo-trinh" class="hover:text-[#E31F26] transition-colors">Lộ Trình</a>
+            <a href="#curriculum" class="hover:text-[#E31F26] transition-colors">Chương Trình</a>
+            <a href="#register" class="bg-[#E31F26] text-white px-6 py-2.5 rounded-md hover:bg-red-700 transition-colors shadow-sm">Đăng ký ngay</a>
+        </div>
+
+        <!-- Mobile Menu Button (Hamburger) -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-700 hover:text-[#E31F26] focus:outline-none">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white border-b shadow-xl flex flex-col font-semibold">
+        <a href="#about" class="mobile-link block px-6 py-4 border-b text-gray-700 hover:bg-gray-50 uppercase text-sm">Hội Thảo</a>
+        <a href="#lo-trinh" class="mobile-link block px-6 py-4 border-b text-gray-700 hover:bg-gray-50 uppercase text-sm">Lộ Trình</a>
+        <a href="#curriculum" class="mobile-link block px-6 py-4 border-b text-gray-700 hover:bg-gray-50 uppercase text-sm">Chương Trình</a>
+        <div class="p-4">
+            <a href="#register" class="mobile-link block w-full text-center bg-[#E31F26] text-white px-4 py-3 rounded-md uppercase text-sm tracking-wider">Đăng ký ngay</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Nút CTA Sticky (Góc dưới phải) -->
+<a href="#register" class="fixed bottom-6 right-6 z-30 bg-[#E31F26] text-white px-5 py-3 rounded-full font-bold shadow-[0_4px_15px_rgba(227,31,38,0.5)] flex items-center gap-2 hover:scale-105 transition-transform md:hidden animate-pulse-cta">
+    <span>Đăng ký</span>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+</a>
+
+<!-- Hero Section -->
+<header id="about" class="py-12 md:py-24 px-4 gradient-bg mt-4">
+    <div class="max-w-7xl mx-auto text-center">
+        <div class="inline-block px-4 py-1.5 bg-red-100 text-[#E31F26] rounded-full text-xs font-bold uppercase mb-6 tracking-wide">
+            Dành cho Phụ Huynh Học Sinh cấp III - Đã học qua giai đoạn chuyên sâu
+        </div>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl mb-6 text-[#000056] leading-snug md:leading-tight px-2">
+            Đối thoại về tương lai cho con<br class="hidden md:block"> trong kỷ nguyên AI
+        </h1>
+        <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 px-4 leading-relaxed">
+            Không gian cởi mở kết nối <span class="font-bold text-[#E31F26]">Phụ Huynh Tinh Hoa - Nhà Trường - Học Sinh</span>. Đồng hành đánh giá trực quan bản đồ năng lực số và kiến tạo "Portfolio Cạnh Tranh" cho con ngay tại sự kiện.
+        </p>
+        
+        <div class="flex flex-col md:flex-row justify-center gap-4 px-4">
+            <a href="#register" class="w-full md:w-auto btn-primary px-8 py-4 rounded-xl font-bold text-base md:text-lg shadow-lg text-center animate-pulse-cta">Giữ chỗ ngay (Giới hạn 10 Suất)</a>
+        </div>
+    </div>
+</header>
+
+<!-- Mục Tiêu Hội Thảo & Lộ trình Bảo Trợ Đa Ngành -->
+<section id="lo-trinh" class="py-16 md:py-24 bg-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl md:text-4xl text-[#000056] mb-4">Lộ Trình Bảo Trợ Đa Ngành</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Trải nghiệm thực chiến để tìm ra đam mê, từ đó định hướng lộ trình chuyên sâu hoàn hảo.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <!-- Cột trái: Lộ trình -->
+            <div class="relative">
+                <!-- Line kết nối -->
+                <div class="absolute left-6 md:left-8 top-10 bottom-10 w-0.5 bg-gray-200"></div>
+                
+                <!-- Năm 6 -->
+                <div class="relative pl-16 md:pl-20 mb-10">
+                    <div class="absolute left-2 md:left-4 top-1 w-8 h-8 rounded-full bg-[#E31F26] text-white flex items-center justify-center font-bold shadow-md z-10">6</div>
+                    <h3 class="text-xl font-bold text-[#000056] mb-2">Năm 6: Business Foundation</h3>
+                    <p class="text-gray-600 text-sm md:text-base bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        Khám phá bức tranh tổng quan qua 3 khía cạnh: <span class="font-semibold">Marketing, Sales & Ops, Finance</span>. Con được thử đóng vai chuyên viên, trải nghiệm làm dự án thật để tự khám phá năng lực và sự yêu thích của bản thân.
+                    </p>
+                </div>
+                
+                <!-- Năm 7 -->
+                <div class="relative pl-16 md:pl-20">
+                    <div class="absolute left-2 md:left-4 top-1 w-8 h-8 rounded-full bg-[#000056] text-white flex items-center justify-center font-bold shadow-md z-10">7</div>
+                    <h3 class="text-xl font-bold text-[#000056] mb-2">Năm 7: Đào Tạo Chuyên Sâu</h3>
+                    <p class="text-gray-600 text-sm md:text-base bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        Sau khi đã trải nghiệm và tìm ra đam mê, học sinh sẽ chọn 1 mảng chuyên môn sâu theo định hướng của MindX để phát triển thành lợi thế cạnh tranh cốt lõi.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Cột phải: Mục tiêu Hội thảo -->
+            <div class="bg-[#000056]/5 p-8 rounded-2xl border-2 border-[#000056]/10">
+                <h3 class="text-xl font-bold text-[#E31F26] uppercase mb-4 text-center">Tầm nhìn buổi hội thảo</h3>
+                <ul class="space-y-4 text-sm md:text-base text-gray-700">
+                    <li class="flex items-start">
+                        <span class="mr-3 mt-1 text-[#000056]">✅</span>
+                        <span>Đánh giá khách quan khung năng lực Số của con hiện tại bởi Chuyên gia.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-3 mt-1 text-[#000056]">✅</span>
+                        <span>Gặp gỡ 10 Phụ huynh tinh hoa cùng chí hướng xây dựng lộ trình cạnh tranh.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-3 mt-1 text-[#000056]">✅</span>
+                        <span>Định hướng tối ưu hóa gói bảo trợ sẵn có <strong>mà không làm gián đoạn việc học hiện tại</strong>.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-3 mt-1 text-[#000056]">✅</span>
+                        <span>Đặc biệt: Hỗ trợ xây dựng trực tiếp bản Portfolio cá nhân tại sự kiện.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Curriculum Interactive Section -->
+<section id="curriculum" class="py-16 md:py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-10 md:mb-16">
+            <h2 class="text-2xl md:text-4xl mb-3 md:mb-4 text-[#000056]"><span class="text-[#E31F26]">NĂM 6:</span> BUSINESS FOUNDATION (K12)</h2>
+            <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Chương trình "MBA + AI thu nhỏ". Đi thẳng vào Case Study thực chiến, loại bỏ lý thuyết lan man.</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-start md:justify-center border-b border-gray-200 mb-8 md:mb-12 overflow-x-auto hide-scrollbar px-2">
+            <button onclick="switchPillar(0)" id="tab-0" class="px-5 md:px-8 py-3 md:py-4 font-bold text-xs md:text-sm uppercase tracking-wider tab-active whitespace-nowrap transition-colors">1. Marketing</button>
+            <button onclick="switchPillar(1)" id="tab-1" class="px-5 md:px-8 py-3 md:py-4 font-bold text-xs md:text-sm uppercase tracking-wider text-gray-400 whitespace-nowrap transition-colors">2. Sales & Ops</button>
+            <button onclick="switchPillar(2)" id="tab-2" class="px-5 md:px-8 py-3 md:py-4 font-bold text-xs md:text-sm uppercase tracking-wider text-gray-400 whitespace-nowrap transition-colors">3. Finance</button>
+        </div>
+
+        <!-- Pillar Content Display -->
+        <div id="pillar-content" class="bg-white p-6 md:p-12 rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 min-h-[450px] md:min-h-[350px]">
+            <!-- Dynamic Content via JS -->
+        </div>
+    </div>
+</section>
+
+<!-- Event Footer & Register -->
+<footer id="register" class="py-16 md:py-24 bg-[#000056] relative">
+    <!-- Hình nền mờ -->
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+    
+    <div class="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
+        <div class="bg-white rounded-2xl md:rounded-3xl p-8 md:p-12 shadow-2xl">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl text-[#000056] mb-3 font-bold uppercase tracking-wide">Đăng ký tham dự Hội Thảo</h2>
+                <p class="text-[#E31F26] font-bold">Lưu ý: Sự kiện giới hạn 10 Suất Nòng Cốt</p>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="relative">
+                <div id="loading-overlay" class="absolute inset-0 bg-white/90 z-10 flex items-center justify-center hidden rounded-xl">
+                    <div class="flex flex-col items-center">
+                        <div class="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-[#E31F26] mb-3"></div>
+                        <p class="text-sm text-[#000056] font-semibold uppercase tracking-wider">Đang xác nhận chỗ...</p>
+                    </div>
+                </div>
+
+                <!-- Đã xóa onsubmit="submitForm(event)" khỏi thẻ form vì ta sẽ gán event bằng JS -->
+                <form id="registrationForm" class="space-y-5 md:space-y-6">
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-bold text-[#000056] mb-2">Họ tên Phụ huynh (*)</label>
+                            <input type="text" id="fullname" name="name" required class="w-full p-3.5 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:border-[#E31F26] focus:ring-2 focus:ring-red-100 outline-none transition-all" placeholder="Vd: Nguyễn Văn A">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-[#000056] mb-2">Số điện thoại (*)</label>
+                            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,11}" class="w-full p-3.5 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:border-[#E31F26] focus:ring-2 focus:ring-red-100 outline-none transition-all" placeholder="Vd: 0912345678">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-[#000056] mb-2">Độ tuổi của con</label>
+                        <select id="age_group" name="age" class="w-full h-[52px] px-3.5 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:border-[#E31F26] focus:ring-2 focus:ring-red-100 outline-none transition-all appearance-none cursor-pointer">
+                            <option value="Cấp 2 (12-15 tuổi)">Cấp 2 (12-15 tuổi)</option>
+                            <option value="Cấp 3 (16-18 tuổi)">Cấp 3 (16-18 tuổi)</option>
+                        </select>
+                    </div>
+                    <div class="pt-4">
+                        <button id="submitBtn" type="submit" class="w-full py-4 btn-primary rounded-xl font-bold uppercase tracking-widest text-lg shadow-lg active:scale-[0.98]">XÁC NHẬN GIỮ CHỖ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Pop-up Gây Chú Ý (Trigger sau 5s) -->
+<div id="urgencyModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeUrgencyModal()"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        
+        <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10 animate-[fadeIn_0.5s_ease-out]">
+            <button onclick="closeUrgencyModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="bg-white px-6 pt-8 pb-6">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4 animate-pulse">
+                        <svg class="h-8 w-8 text-[#E31F26]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-[#000056] mb-2 uppercase">Chỉ còn 3 suất ưu tiên!</h3>
+                    <p class="text-sm text-gray-600 mb-4">Để đảm bảo chất lượng cố vấn chuyên sâu 1:1, Hội thảo xin phép giới hạn <strong>tối đa 10 Phụ huynh</strong>. Hiện tại đã có 7 lượt đăng ký.</p>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 flex flex-col gap-3">
+                <a href="#register" onclick="closeUrgencyModal()" class="w-full inline-flex justify-center rounded-xl px-4 py-3 bg-[#E31F26] text-sm font-bold text-white shadow-md hover:bg-red-700 focus:outline-none uppercase tracking-wider">Đăng ký giữ chỗ ngay</a>
+                <button onclick="closeUrgencyModal()" class="text-sm text-gray-500 underline">Tôi sẽ đăng ký sau</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Đăng Ký Thành Công -->
+<div id="successModal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        
+        <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10">
+            <div class="bg-white px-6 py-8">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                        <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Giữ chỗ thành công!</h3>
+                    <p class="text-sm md:text-base text-gray-600">MindX đã nhận được thông tin đăng ký. Bộ phận Tuyển sinh sẽ liên hệ anh/chị trong 24h tới để xác nhận thời gian chính xác.</p>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4">
+                <button type="button" onclick="closeModal()" class="w-full inline-flex justify-center rounded-xl px-4 py-3 bg-[#000056] text-base font-bold text-white focus:outline-none">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Mobile Menu Toggle ---
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function toggleMenu() {
+        mobileMenu.classList.toggle('hidden');
+        if (mobileMenu.classList.contains('hidden')) {
+            menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        } else {
+            menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+        }
+    }
+    mobileMenuBtn.addEventListener('click', toggleMenu);
+    mobileLinks.forEach(link => link.addEventListener('click', () => { if (!mobileMenu.classList.contains('hidden')) toggleMenu(); }));
+
+    // --- Hiển thị Urgency Popup lặp lại ---
+    let popupCount = 0;
+    const maxPopups = 4; // Tổng số lần hiển thị tối đa
+
+    function showUrgencyPopup() {
+        if (popupCount < maxPopups) {
+            document.getElementById('urgencyModal').classList.remove('hidden');
+            popupCount++;
+            
+            // Đặt lịch cho lần xuất hiện tiếp theo sau 90 giây
+            if (popupCount < maxPopups) {
+                setTimeout(showUrgencyPopup, 90000); 
+            }
+        }
+    }
+
+    // Trigger lần đầu tiên sau 5s
+    setTimeout(showUrgencyPopup, 5000);
+
+    function closeUrgencyModal() { document.getElementById('urgencyModal').classList.add('hidden'); }
+
+    // --- Nội dung Trụ cột khóa Business ---
+    const pillars = [
+        {
+            title: "Tư duy Tiếp thị (Marketing)",
+            learn: "Hiểu bản chất mô hình 4P (Product, Price, Place, Promotion). Xây dựng chân dung khách hàng và định vị thương hiệu trên thị trường.",
+            do: "Trở thành Chuyên viên Marketing: Xây dựng chiến dịch đa kênh, tối ưu phễu chuyển đổi. Sử dụng AI để sáng tạo nội dung (AIDA) và làm hình ảnh.",
+            result: "The Marketing Package: Sở hữu 01 bộ hệ thống kênh (FB, Tiktok) tối ưu, bộ nhận diện thương hiệu tự làm và Báo cáo chiến dịch."
+        },
+        {
+            title: "Tư duy Bán hàng (Sales & Ops)",
+            learn: "Đọc vị tâm lý nhu cầu (Mô hình DISC), quy trình xử lý từ chối LEAC. Tư duy vận hành và chăm sóc khách hàng Trước-Trong-Sau.",
+            do: "AI Sales Mentor độc quyền: Giả lập khách hàng khó tính bằng AI (ChatGPT/Gemini) để học sinh luyện phản xạ xử lý từ chối 24/7. ",
+            result: "Đóng vai Startup: Xây dựng dự án bán hàng thật, MindX bảo trợ thị trường để đem về khách hàng tiềm năng và chuyển đổi ra doanh thu."
+        },
+        {
+            title: "Tư duy Tài chính (Finance)",
+            learn: "Tư duy cấu trúc tài chính doanh nghiệp: Phân tích Lãi/Lỗ (P&L), quản trị Dòng tiền (Cashflow) và đọc hiểu Bảng cân đối kế toán (Balance Sheet).",
+            do: "Thực chiến tại Doanh Nghiệp (Company Tour): Đến tận công ty, phỏng vấn thực tế phòng tài chính để hiểu dòng máu duy trì sự sống tổ chức.",
+            result: "Làm Báo cáo cuối khóa tổng quan bức tranh tài chính của Doanh nghiệp, đề xuất phương án tối ưu dựa trên chỉ số thu thập được."
+        }
+    ];
+
+    function switchPillar(index) {
+        for (let i = 0; i < 3; i++) {
+            const tab = document.getElementById(`tab-${i}`);
+            if (i === index) {
+                tab.classList.add('tab-active'); tab.classList.remove('text-gray-400');
+            } else {
+                tab.classList.remove('tab-active'); tab.classList.add('text-gray-400');
+            }
+        }
+        const contentDiv = document.getElementById('pillar-content');
+        const data = pillars[index];
+        contentDiv.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 animate-[fadeIn_0.3s_ease-in-out]">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
+                    <h5 class="text-[#000056] font-bold text-base uppercase mb-4 flex items-center border-b-2 border-red-200 pb-2"><span class="mr-2 text-xl">📚</span> Nền Tảng Lý Thuyết</h5>
+                    <p class="text-gray-700 text-sm leading-relaxed">${data.learn}</p>
+                </div>
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100 hover:shadow-md transition-shadow">
+                    <h5 class="text-[#E31F26] font-bold text-base uppercase mb-4 flex items-center border-b-2 border-red-200 pb-2"><span class="mr-2 text-xl">⚙️</span> Thực Chiến & AI</h5>
+                    <p class="text-gray-800 text-sm leading-relaxed">${data.do}</p>
+                </div>
+                <div class="bg-[#000056] text-white p-6 rounded-xl shadow-lg transform md:-translate-y-2">
+                    <h5 class="text-red-400 font-bold text-base uppercase mb-4 flex items-center border-b-2 border-white/20 pb-2"><span class="mr-2 text-xl">🏆</span> Sản Phẩm Đầu Ra</h5>
+                    <p class="text-white/90 text-sm leading-relaxed">${data.result}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- Submit Form qua Google Script ---
+    // Nhớ thay thế URL dưới đây bằng URL Deploy MỚI NHẤT từ Google Apps Script
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwJpwAZz0IIa4VJlMxnPZRi194g3t-H2MmRyOd4arfX9YcdQKUK4Q-TOWiVdZbeazqJA/exec"; 
+
+    const form = document.getElementById('registrationForm');
+    
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        
+        submitBtn.disabled = true;
+        loadingOverlay.classList.remove('hidden');
+
+        // Tạo FormData từ chính thẻ <form> (Yêu cầu các thẻ <input> phải có thuộc tính 'name')
+        const data = new FormData(form);
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: data
+            // Bỏ mode: 'no-cors' đi. 
+        })
+        .then(response => {
+            // Hiển thị modal thành công ngay cả khi response bị Google redirect (trạng thái opaque)
+            document.getElementById('successModal').classList.remove('hidden');
+            form.reset();
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            // Vẫn hiện thành công vì đôi khi chặn CORS do trình duyệt nhưng data vẫn về sheet
+            document.getElementById('successModal').classList.remove('hidden'); 
+            form.reset();
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            loadingOverlay.classList.add('hidden');
+        });
+    });
+
+    function closeModal() { document.getElementById('successModal').classList.add('hidden'); }
+
+    // Init trang
+    window.onload = () => { switchPillar(0); };
+</script>
+
+</body>
+</html>
